@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Oluşturucu</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      font-family: 'Inter', sans-serif;
+      color: #222;
+      background: #f8f8f8;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .topbar button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 14px;
+      background: #3b82f6;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+      transition: transform .15s ease;
+    }
+
+    .topbar button:hover {
+      transform: translateY(-1px);
+    }
+
+    .qr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .qr-card {
+      background: white;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,.08);
+      padding: 16px;
+      box-shadow: 0 16px 45px rgba(15, 23, 42, .08);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+    }
+
+    .qr-label {
+      font-weight: 700;
+      font-size: 15px;
+      text-align: center;
+      color: #111827;
+    }
+
+    .qr-container {
+      width: 180px;
+      height: 180px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+    }
+
+    .qr-note {
+      font-size: 13px;
+      color: #6b7280;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    @media print {
+      body {
+        padding: 10px;
+        background: white;
+      }
+
+      .topbar {
+        display: none;
+      }
+
+      .qr-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .qr-card {
+        border: 1px solid #000;
+        box-shadow: none;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        padding: 10px;
+      }
+
+      .qr-note {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <h1>QR Oluşturucu</h1>
+    <button type="button" onclick="window.print()">Yazdır</button>
+  </div>
+
+  <div class="qr-grid" id="qrGrid"></div>
+
+  <script>
+    const grid = document.getElementById('qrGrid');
+    const baseUrl = 'https://akilli-menu-sistemi.vercel.app/cemilay-sistem.html?masa=';
+
+    for (let masa = 1; masa <= 100; masa += 1) {
+      const card = document.createElement('div');
+      card.className = 'qr-card';
+
+      const container = document.createElement('div');
+      container.className = 'qr-container';
+      container.id = 'qr-' + masa;
+
+      const label = document.createElement('div');
+      label.className = 'qr-label';
+      label.textContent = 'Masa ' + masa;
+
+      const note = document.createElement('div');
+      note.className = 'qr-note';
+      note.textContent = baseUrl + masa;
+
+      card.appendChild(container);
+      card.appendChild(label);
+      card.appendChild(note);
+      grid.appendChild(card);
+
+      new QRCode(container, {
+        text: baseUrl + masa,
+        width: 170,
+        height: 170,
+        colorDark: '#111827',
+        colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    }
+  </script>
+</body>
+</html>
